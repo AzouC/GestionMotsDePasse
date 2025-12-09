@@ -1,1 +1,58 @@
+# -------------------------------------------------------------------------
+# Configuration du Projet
+# -------------------------------------------------------------------------
+PROJECT_NAME           = "GestionMotsDePasse"
+PROJECT_NUMBER         = "1.0"
+PROJECT_BRIEF          = "Application de gestion sécurisée de mots de passe (BTS CIEL)"
 
+# Langue de la documentation générée (Français pour le BTS)
+OUTPUT_LANGUAGE        = French
+
+# -------------------------------------------------------------------------
+# Configuration des Entrées (Où chercher le code ?)
+# -------------------------------------------------------------------------
+# C'est ici qu'on indique à Doxygen de regarder dans vos dossiers spécifiques
+# On inclut 'include' pour les .h, 'src' pour les .cpp et le README pour la page d'accueil
+INPUT                  = include \
+                         src \
+                         README.md
+
+# Permet de chercher dans les sous-dossiers (sécurité)
+RECURSIVE              = YES
+
+# Utiliser le README.md comme page d'accueil de la doc
+USE_MDFILE_AS_MAINPAGE = README.md
+
+# -------------------------------------------------------------------------
+# Configuration des Sorties (Où mettre la doc ?)
+# -------------------------------------------------------------------------
+# Mettre la documentation dans un dossier à part pour ne pas polluer la racine
+OUTPUT_DIRECTORY       = docs
+
+# Générer de la documentation HTML (Site web)
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+HTML_FILE_EXTENSION    = .html
+
+# Désactiver LaTeX (inutile pour une simple consultation web)
+GENERATE_LATEX         = NO
+
+# -------------------------------------------------------------------------
+# Options d'Extraction
+# -------------------------------------------------------------------------
+# Documenter toutes les entités, même celles sans commentaires explicites
+EXTRACT_ALL            = YES
+
+# Documenter les membres privés (utile pour les diagrammes de classe complets)
+EXTRACT_PRIVATE        = YES
+
+# Documenter les membres statiques
+EXTRACT_STATIC         = YES
+
+# -------------------------------------------------------------------------
+# Diagrammes (Optionnel - nécessite Graphviz installé)
+# -------------------------------------------------------------------------
+# Si vous avez Graphviz, mettez HAVE_DOT à YES pour avoir de beaux graphiques UML
+HAVE_DOT               = NO
+# CLASS_DIAGRAMS est à YES par défaut, cela génère des diagrammes simples
+CLASS_DIAGRAMS         = YES
