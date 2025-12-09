@@ -1,1 +1,35 @@
+# Image Docker de base : Utilise une version récente de GCC (compilateur C++)
+image: gcc:latest
 
+# Définition des étapes du pipeline (ici, uniquement la compilation)
+stages:
+  - build
+
+# Job de compilation
+build_project:
+  stage: build
+  
+  # Préparation de l'environnement avant la compilation
+  before_script:
+    - apt-get update -qy
+    # Installation de CMake et de la bibliothèque de développement OpenSSL (libssl-dev)
+    # Indispensable car votre code utilise <openssl/sha.h>
+    - apt-get install -y cmake libssl-dev
+
+  # Commandes de compilation
+  script:
+    - echo "Début de la compilation..."
+    - mkdir -p build
+    - cd build
+    # Génération du Makefile avec CMake
+    - cmake ..
+    # Compilation du code source
+    - make
+    - echo "Compilation terminée avec succès."
+
+  # Sauvegarde de l'exécutable généré pour pouvoir le télécharger depuis GitLab
+  artifacts:
+    paths:
+      # Assurez-vous que ce nom correspond à celui défini dans votre CMakeLists.txt (add_executable)
+      - build/GestionMotsDePasse
+    expire_in: 1 week
