@@ -1,32 +1,55 @@
-#ifndef PASSWORDENTRY_H
-#define PASSWORDENTRY_H
+#include "PasswordEntry.h"
 
-#include <string>
+using namespace std;
 
-class PasswordEntry {
-private:
-    // Attributs privés (Encapsulation)
-    // "Chaque entrée inclut un nom de site, un nom d'utilisateur et le mot de passe associé."
-    std::string siteName;
-    std::string username;
-    std::string password;
+/**
+ * Constructeur par défaut.
+ * Initialise les attributs à vide ou avec des valeurs par défaut.
+ * Similaire au constructeur par défaut de la classe Tache.
+ */
+PasswordEntry::PasswordEntry() {
+    this->siteName = "";
+    this->username = "";
+    this->password = "";
+}
 
-public:
-    // Constructeur par défaut
-    PasswordEntry();
+/**
+ * Constructeur surchargé.
+ * Permet d'initialiser l'objet avec des valeurs spécifiques dès sa création.
+ * * @param site Le nom du site web ou de l'application
+ * @param user Le nom d'utilisateur associé
+ * @param pass Le mot de passe associé
+ */
+PasswordEntry::PasswordEntry(string site, string user, string pass) {
+    this->siteName = site;
+    this->username = user;
+    this->password = pass;
+}
 
-    // Constructeur surchargé (pour créer une entrée complète directement)
-    PasswordEntry(std::string site, std::string user, std::string pass);
+// --- Implémentation des Getters (Accesseurs) ---
 
-    // Accesseurs (Getters) - pour lire les valeurs
-    std::string getSiteName() const;
-    std::string getUsername() const;
-    std::string getPassword() const;
+string PasswordEntry::getSiteName() const {
+    return this->siteName;
+}
 
-    // Mutateurs (Setters) - pour modifier les valeurs si besoin
-    void setSiteName(std::string site);
-    void setUsername(std::string user);
-    void setPassword(std::string pass);
-};
+string PasswordEntry::getUsername() const {
+    return this->username;
+}
 
-#endif // PASSWORDENTRY_H
+string PasswordEntry::getPassword() const {
+    return this->password;
+}
+
+// --- Implémentation des Setters (Mutateurs) ---
+
+void PasswordEntry::setSiteName(string site) {
+    this->siteName = site;
+}
+
+void PasswordEntry::setUsername(string user) {
+    this->username = user;
+}
+
+void PasswordEntry::setPassword(string pass) {
+    this->password = pass;
+}
