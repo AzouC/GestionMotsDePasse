@@ -1,1 +1,50 @@
+# --- Dossiers de compilation (CMake) ---
+build/
+bin/
+lib/
+out/
 
+# --- Fichiers temporaires CMake ---
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+
+# --- Binaires et Objets (Compilation C++) ---
+# Windows
+*.exe
+*.obj
+*.lib
+*.dll
+*.pdb
+*.ilk
+*.exp
+
+# Linux / Mac (au cas où)
+*.o
+*.a
+*.so
+*.out
+
+# --- Fichiers de configuration IDE (Visual Studio / VS Code) ---
+.vscode/
+.vs/
+.idea/
+*.sln
+*.vcxproj
+*.vcxproj.user
+*.suo
+
+# --- Documentation générée par Doxygen ---
+# On garde le fichier de config Doxyfile, mais pas le résultat
+html/
+latex/
+rtf/
+xml/
+
+# --- Système (Windows / Mac) ---
+Thumbs.db
+Desktop.ini
+.DS_Store
