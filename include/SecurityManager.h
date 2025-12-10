@@ -7,11 +7,14 @@ class SecurityManager {
 public:
     SecurityManager();
     
-    // Génère une chaîne aléatoire de taille donnée
+    // Génère un sel aléatoire
     std::string generateSalt(int length);
     
-    // Hache le mot de passe avec le sel fourni
+    // Hache le mot de passe
     std::string hashPassword(const std::string& password, const std::string& salt);
+
+    // Vérifie si un mot de passe correspond au hash stocké
+    bool verifyMasterPassword(const std::string& inputPassword, const std::string& storedHash, const std::string& storedSalt);
 };
 
 #endif // SECURITYMANAGER_H
