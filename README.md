@@ -1,106 +1,183 @@
-🔐 Application de Gestion de Mots de Passe Sécurisée
-📄 Contexte du Projet
-Ce projet a été réalisé dans le cadre du BTS CIEL, Bloc 3 : "Valorisation de la donnée et cybersécurité". L'objectif est de concevoir une application robuste permettant de stocker des identifiants sensibles en respectant les principes modernes de développement sécurisé et de programmation orientée objet (POO).
+🔐 Gestionnaire de Mots de Passe Sécurisé (C++)
+📄 Présentation du Projet
+Ce projet a été réalisé dans le cadre du BTS CIEL (Cybersécurité, Informatique et réseaux, Électronique), spécifiquement pour le Bloc 3 : Valorisation de la donnée et cybersécurité.
+
+L'objectif est de fournir une solution robuste et sécurisée pour le stockage local d'identifiants. Contrairement à un stockage en texte clair, cette application implémente les standards cryptographiques actuels pour garantir la confidentialité du mot de passe maître.
+
+🚀 Fonctionnalités
+
+Création de Compte Sécurisée : Définition d'un nom d'utilisateur et d'un mot de passe maître chiffré.
 
 
-🚀 Fonctionnalités Clés
-L'application offre une interface en ligne de commande (CLI) sécurisée proposant les services suivants :
+Authentification Forte : Vérification stricte des identifiants avant l'accès au coffre-fort.
+
+Gestion CRUD complète :
+
+Ajouter un nouveau mot de passe.
+
+Consulter la liste des comptes enregistrés.
+
+Modifier une entrée existante.
+
+Supprimer une entrée.
 
 
-Authentification Forte : Création d'un compte protégé par un mot de passe maître chiffré.
-
-
-Coffre-fort Numérique : Ajout, modification et suppression d'entrées (Site, Utilisateur, Mot de passe).
-
-
-Consultation Sécurisée : Affichage de la liste des comptes enregistrés.
-
-
-Architecture Modulaire : Conception extensible permettant l'ajout futur de fonctionnalités (multi-utilisateurs, chiffrement AES des données).
+Persistance (Session) : Maintien des données en mémoire vive durant l'exécution (vecteurs dynamiques).
 
 🛡️ Architecture de Sécurité & Cryptographie
-La sécurité est au cœur de ce projet. Conformément au cahier des charges, aucune donnée critique d'authentification n'est stockée en clair.
+La sécurité est le cœur de ce projet. Aucune donnée d'authentification critique n'est stockée en clair.
 
 1. Hachage SHA-256
-Le mot de passe maître est transformé en empreinte numérique via l'algorithme SHA-256 (Secure Hash Algorithm 256-bits). Cette fonction unidirectionnelle garantit que le mot de passe original ne peut être reconstruit à partir de l'empreinte stockée.
+Le mot de passe maître est transformé en une empreinte numérique unique de 256 bits via l'algorithme SHA-256 (Secure Hash Algorithm). Cette opération est irréversible.
 
-2. Mécanisme de "Salage" (Salting)
-Pour contrer les attaques par dictionnaire et les Rainbow Tables (tables arc-en-ciel), un sel aléatoire (random salt) unique est généré cryptographiquement pour chaque utilisateur via OpenSSL (RAND_bytes).
+2. Salage (Salting)
+Pour contrer les attaques par dictionnaire et les Rainbow Tables, nous utilisons la technique de la "salaison".
 
+Un sel aléatoire (random salt) unique est généré cryptographiquement pour chaque utilisateur via RAND_bytes d'OpenSSL.
 
-L'empreinte stockée correspond à : SHA256(MotDePasse + Sel).
+Formule utilisée : Hash = SHA256(MotDePasse + Sel).
 
 3. Bibliothèque OpenSSL
-L'implémentation repose sur la bibliothèque éprouvée OpenSSL pour garantir la fiabilité des primitives cryptographiques utilisées.
-
-🛠️ Conception Technique (UML & POO)
-Le projet respecte une architecture Orientée Objet stricte avec une séparation claire des responsabilités:
-
-
-PasswordEntry : Encapsule les données d'une entrée unique (Site, Login, Pass).
-
-
-PasswordVault : Gère la collection dynamique des mots de passe (utilisation de std::vector).
-
-
-SecurityManager : Classe utilitaire dédiée aux opérations cryptographiques (Génération de sel, calcul de Hash).
-
-⚙️ Installation et Compilation
-Prérequis
-Compilateur C++ compatible C++17 (GCC, MSVC, Clang).
-
-
-CMake (Version 3.10 minimum).
-
-Bibliothèque OpenSSL installée sur le système.
-
-Procédure de Build (Windows/Linux)
-Le projet utilise un système de build automatisé via CMake.
-
-Bash
-
-# 1. Cloner le dépôt
-git clone <url_du_repo>
-cd GestionMotsDePasse
-
-# 2. Créer le dossier de build (Bonne pratique CMake)
-mkdir build
-cd build
-
-# 3. Configurer le projet
-cmake ..
-
-# 4. Compiler
-make  # ou 'cmake --build .' sous Windows
-🔄 Intégration Continue (DevOps)
-Le projet intègre une chaîne CI/CD (GitLab CI) pour automatiser la validation du code. À chaque push sur le dépôt, un pipeline s'exécute pour :
-
-Installer les dépendances (CMake, OpenSSL).
-
-Compiler le projet à neuf pour vérifier l'intégrité du code.
-
-📚 Documentation
-La documentation technique des classes et méthodes est générée automatiquement via Doxygen. Pour la générer localement :
-
-Bash
-
-doxygen Doxyfile
-Le résultat sera disponible dans le dossier docs/html/index.html.
+L'implémentation repose sur la bibliothèque professionnelle OpenSSL pour garantir la fiabilité des primitives cryptographiques.
 
 🎓 Compétences Validées
-Ce projet permet de valider les compétences suivantes du référentiel BTS CIEL-IR :
+Ce projet démontre la maîtrise des compétences suivantes du référentiel BTS CIEL-IR :
 
+Développement C++ & POO :
 
-C03 : Évaluer la complexité technique et la criticité (gestion des données sensibles).
+Conception de classes et objets (PasswordEntry, PasswordVault).
 
+Encapsulation des données sensibles.
 
-Gestion de projet : Analyse, conception, réalisation et validation.
+Utilisation de conteneurs standards (std::vector).
 
+Cybersécurité :
 
+Compréhension des mécanismes de hachage et de sel.
 
-Développement : Maîtrise du C++ et de la POO (Encapsulation, Vecteurs, Pointeurs).
+Intégration de bibliothèques tierces de sécurité (OpenSSL).
 
+DevOps & Gestion de Projet :
 
-Outils DevOps : Git, Versionning, Pipeline CI/CD.
+Utilisation de Git pour le versionning.
 
-Projet réalisé par [Malo & Romain].
+Automatisation de la compilation avec CMake.
+
+Pipeline d'intégration continue (GitLab CI).
+
+Documentation technique automatique via Doxygen.
+
+💻 Guide d'Installation (Pour l'utilisateur)
+Ce guide est destiné à une personne souhaitant simplement lancer l'application sur sa machine.
+
+Prérequis
+Avoir CMake installé.
+
+Avoir un compilateur C++ (GCC, Clang ou MSVC).
+
+Avoir la bibliothèque OpenSSL installée.
+
+🪟 Windows
+Installez OpenSSL : Téléchargez "Win64 OpenSSL v3.x Light" sur slproweb.com. Installez-le dans le dossier par défaut.
+
+Ouvrez un terminal (PowerShell) dans le dossier du projet.
+
+Compilez et lancez :
+
+PowerShell
+
+mkdir build
+cd build
+cmake ..
+cmake --build .
+.\Debug\GestionMotsDePasse.exe
+(Note : Si le programme ne se lance pas, copiez les fichiers libssl-3-x64.dll et libcrypto-3-x64.dll depuis C:\Program Files\OpenSSL-Win64\bin vers le dossier de l'exécutable).
+
+🐧 Linux (Debian/Ubuntu)
+Bash
+
+# 1. Installer les dépendances
+sudo apt-get update
+sudo apt-get install cmake g++ libssl-dev
+
+# 2. Compiler
+mkdir build && cd build
+cmake ..
+make
+
+# 3. Lancer
+./GestionMotsDePasse
+🍎 macOS
+Bash
+
+# 1. Installer les dépendances (via Homebrew)
+brew install cmake openssl
+
+# 2. Compiler (en spécifiant le chemin d'OpenSSL si besoin)
+mkdir build && cd build
+cmake .. -DOPENSSL_ROOT_DIR=$(brew --prefix openssl)
+make
+
+# 3. Lancer
+./GestionMotsDePasse
+🛠️ Guide du Développeur (VS Code)
+Ce guide est destiné aux développeurs souhaitant modifier ou analyser le code source via Visual Studio Code, particulièrement sous Windows.
+
+1. Configuration de l'environnement (Windows)
+Avant d'ouvrir VS Code, assurez-vous d'avoir installé :
+
+VS Code + Extension "C/C++" + Extension "CMake Tools".
+
+CMake (Ajouté au PATH système).
+
+OpenSSL (Installé dans C:\Program Files\OpenSSL-Win64).
+
+2. Ouverture du Projet
+⚠️ Très important : Ne pas ouvrir un fichier seul.
+
+Lancez VS Code.
+
+Faites Fichier > Ouvrir le dossier....
+
+Sélectionnez le dossier racine GestionMotsDePasse-main (celui qui contient directement CMakeLists.txt).
+
+3. Configuration de CMake
+Si VS Code ne détecte pas OpenSSL automatiquement, créez un dossier .vscode à la racine et ajoutez un fichier settings.json :
+
+JSON
+
+{
+    "cmake.configureSettings": {
+        "OPENSSL_ROOT_DIR": "C:/Program Files/OpenSSL-Win64"
+    },
+    "C_Cpp.default.includePath": [
+        "C:/Program Files/OpenSSL-Win64/include",
+        "${workspaceFolder}/include"
+    ]
+}
+4. Compilation et Exécution
+Utilisez la barre d'état CMake située tout en bas de la fenêtre VS Code (Barre bleue/violette) :
+
+Sélecteur de Kit : Cliquez et choisissez votre compilateur (ex: GCC 13.x.x ou Visual Studio Community).
+
+Build (⚙️) : Cliquez sur la roue dentée pour compiler le projet.
+
+Run (▶️) : Cliquez sur le petit triangle de lecture (à côté de la roue dentée) pour lancer l'application dans le terminal intégré.
+
+📂 Structure du Projet
+Plaintext
+
+GestionMotsDePasse/
+├── CMakeLists.txt       # Configuration de la compilation (OpenSSL linkage)
+├── .gitlab-ci.yml       # Pipeline CI/CD pour GitLab
+├── Doxyfile             # Configuration de la documentation
+├── README.md            # Ce fichier
+├── include/             # Fichiers d'en-tête (.h)
+│   ├── PasswordEntry.h
+│   ├── PasswordVault.h
+│   └── SecurityManager.h
+└── src/                 # Codes sources (.cpp)
+    ├── main.cpp         # Menu principal et logique utilisateur
+    ├── PasswordEntry.cpp
+    ├── PasswordVault.cpp
+    └── SecurityManager.cpp
