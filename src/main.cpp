@@ -1,159 +1,161 @@
 #include <iostream>
 #include <string>
-#include <limits> // Nécessaire pour vider le buffer cin sous Windows
-
-// Inclusion des en-têtes de vos classes
+#include <limits>
 #include "PasswordEntry.h"
 #include "PasswordVault.h"
 #include "SecurityManager.h"
 
 using namespace std;
 
-// Fonction utilitaire pour nettoyer le buffer d'entrée (problème fréquent sous Windows après un cin >> int)
+// Fonction pour nettoyer le buffer clavier
 void viderBuffer() {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
 int main() {
-    // Instanciation des gestionnaires
     SecurityManager security;
     PasswordVault vault;
 
-    // Variables pour la session utilisateur
-    string masterPasswordHash = ""; // Stockera l'empreinte du mot de passe maître
-    string masterSalt = "";         // Stockera le sel unique
-    bool compteCree = false;        // Pour savoir si l'utilisateur a déjà configuré son compte
-    bool estConnecte = false;       // État de connexion [cite: 423]
+    // Variables de session
+    string masterUsername = "";     // Nom d'utilisateur principal
+    string masterPasswordHash = ""; // Hash du mot de passe maître
+    string masterSalt = "";         // Sel unique
+    
+    bool compteCree = false;
+    bool estConnecte = false;
     int choix = -1;
 
-    // --- Boucle principale du programme ---
     while (choix != 0) {
         cout << "\n==============================================" << endl;
-        cout << "   APPLICATION GESTION MOTS DE PASSE" << endl;
+        cout << "   GESTIONNAIRE DE MOTS DE PASSE (BTS CIEL)" << endl;
         cout << "==============================================" << endl;
 
-        // Affichage dynamique du menu selon l'état [cite: 423, 424]
+        // Affichage dynamique du menu
         if (!compteCree) {
-            cout << "1. Creer un compte (Master Password)" << endl;
+            cout << "1. Creer un compte (Utilisateur & Mdp)" << endl;
         } else if (!estConnecte) {
             cout << "1. Se connecter" << endl;
         } else {
-            // Options disponibles uniquement si connecté [cite: 424]
+            cout << "Connecte en tant que : " << masterUsername << endl;
+            cout << "----------------------------------------------" << endl;
             cout << "1. Ajouter un mot de passe" << endl;
             cout << "2. Lister les mots de passe" << endl;
-            cout << "3. Supprimer un mot de passe" << endl;
-            cout << "4. Se deconnecter" << endl;
+            cout << "3. Modifier un mot de passe" << endl;
+            cout << "4. Supprimer un mot de passe" << endl;
+            cout << "5. Se deconnecter" << endl;
         }
         cout << "0. Quitter" << endl;
         cout << "Votre choix : ";
         
-        if (!(cin >> choix)) { // Gestion erreur de saisie non numérique
-            cout << "Erreur : Veuillez entrer un nombre." << endl;
+        if (!(cin >> choix)) {
+            cout << "Erreur de saisie." << endl;
             viderBuffer();
             continue;
         }
-        viderBuffer(); // Consommer le retour à la ligne restant
+        viderBuffer();
 
-        // --- Traitement des actions ---
         switch (choix) {
         case 0:
-            cout << "Fermeture de l'application..." << endl;
+            cout << "Au revoir !" << endl;
             break;
 
         case 1:
             if (!compteCree) {
-                // --- Création de compte [cite: 417] ---
-                cout << "Definition du mot de passe Maitre : ";
+                // --- CRÉATION DE COMPTE ---
+                cout << "Choisissez votre Nom d'utilisateur : ";
+                getline(cin, masterUsername);
+
+                cout << "Choisissez votre Mot de passe Maitre : ";
                 string inputMdp;
                 getline(cin, inputMdp);
 
-                // Sécurisation : Génération du sel et hachage [cite: 590, 628]
-                masterSalt = security.generateSalt(16); 
+                // Sécurisation
+                masterSalt = security.generateSalt(16);
                 masterPasswordHash = security.hashPassword(inputMdp, masterSalt);
                 
                 compteCree = true;
-                cout << "Compte cree avec succes ! Vous pouvez maintenant vous connecter." << endl;
+                cout << ">> Compte cree avec succes ! Connectez-vous maintenant." << endl;
             } 
             else if (!estConnecte) {
-                // --- Connexion [cite: 423] ---
-                cout << "Entrez votre mot de passe Maitre : ";
-                string inputMdp;
+                // --- CONNEXION ---
+                string inputUser, inputMdp;
+                cout << "Nom d'utilisateur : ";
+                getline(cin, inputUser);
+
+                cout << "Mot de passe Maitre : ";
                 getline(cin, inputMdp);
 
-                // Vérification : on re-hache la saisie avec le sel stocké 
-                string attemptHash = security.hashPassword(inputMdp, masterSalt);
-
-                if (attemptHash == masterPasswordHash) {
+                // Vérification stricte : Nom d'utilisateur + Hash du MDP
+                if (inputUser == masterUsername && 
+                    security.verifyMasterPassword(inputMdp, masterPasswordHash, masterSalt)) {
                     estConnecte = true;
-                    cout << "Connexion reussie !" << endl;
+                    cout << ">> Connexion reussie !" << endl;
                 } else {
-                    // Gestion d'erreur [cite: 426]
-                    cout << "Erreur : Mot de passe incorrect." << endl;
+                    cout << ">> Erreur : Identifiants incorrects." << endl;
                 }
             } 
             else {
-                // --- Ajouter une entrée (Si connecté) [cite: 418] ---
+                // --- AJOUTER ---
                 string site, user, pass;
-                cout << "Nom du site : ";
-                getline(cin, site);
-                cout << "Nom utilisateur : ";
-                getline(cin, user);
-                cout << "Mot de passe : ";
-                getline(cin, pass);
+                cout << "Nom du site : "; getline(cin, site);
+                cout << "Identifiant sur le site : "; getline(cin, user);
+                cout << "Mot de passe du site : "; getline(cin, pass);
 
-                // Création de l'objet et ajout au vecteur via le Vault
-                PasswordEntry nouvelleEntree(site, user, pass);
-                vault.addEntry(nouvelleEntree);
-                cout << "Entree ajoutee !" << endl;
+                PasswordEntry entry(site, user, pass);
+                vault.addEntry(entry);
+                cout << ">> Entree ajoutee." << endl;
             }
             break;
 
-        case 2:
-            if (estConnecte) {
-                // --- Lister les tâches [cite: 424] ---
-                cout << "\n--- Liste de vos mots de passe ---" << endl;
-                vault.listEntries(); // Cette méthode doit faire les cout des entrées
-            } else {
-                cout << "Option invalide." << endl;
-            }
+        case 2: // --- LISTER ---
+            if (estConnecte) vault.listEntries();
             break;
 
-        case 3:
+        case 3: // --- MODIFIER ---
             if (estConnecte) {
-                // --- Supprimer une entrée [cite: 418] ---
-                cout << "\n--- Suppression ---" << endl;
-                // On affiche d'abord la liste pour que l'utilisateur choisisse un index
-                vault.listEntries(); 
-                
-                cout << "Entrez le numero (index) a supprimer : ";
+                vault.listEntries();
+                cout << "Numero (ID) a modifier : ";
                 int index;
                 if (cin >> index) {
-                    // Attention : gérer le décalage d'index (utilisateur tape 1, vecteur attend 0) 
-                    // si votre affichage commence à 1. Sinon, passer l'index direct.
-                    vault.deleteEntry(index); 
-                    cout << "Entree supprimee." << endl;
-                } else {
-                    cout << "Saisie invalide." << endl;
                     viderBuffer();
+                    string site, user, pass;
+                    cout << "Nouveau nom du site : "; getline(cin, site);
+                    cout << "Nouvel identifiant : "; getline(cin, user);
+                    cout << "Nouveau mot de passe : "; getline(cin, pass);
+                    
+                    PasswordEntry updatedEntry(site, user, pass);
+                    vault.updateEntry(index, updatedEntry);
+                } else {
+                    viderBuffer();
+                    cout << "Saisie invalide." << endl;
                 }
-            } else {
-                cout << "Option invalide." << endl;
             }
             break;
 
-        case 4:
+        case 4: // --- SUPPRIMER ---
             if (estConnecte) {
-                // --- Déconnexion [cite: 424] ---
+                vault.listEntries();
+                cout << "Numero (ID) a supprimer : ";
+                int index;
+                if (cin >> index) {
+                    vault.deleteEntry(index);
+                } else {
+                    viderBuffer();
+                    cout << "Saisie invalide." << endl;
+                }
+            }
+            break;
+
+        case 5: // --- DÉCONNEXION ---
+            if (estConnecte) {
                 estConnecte = false;
-                cout << "Vous etes deconnecte." << endl;
-            } else {
-                cout << "Option invalide." << endl;
+                cout << ">> Deconnexion..." << endl;
             }
             break;
 
         default:
-            cout << "Choix non reconnu." << endl;
+            cout << "Choix inconnu." << endl;
             break;
         }
     }
