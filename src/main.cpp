@@ -1,7 +1,7 @@
 /**
  * @file main.cpp
  * @brief Point d'entrée de l'application "Gestionnaire de Mots de Passe".
- * @author Malo
+ * @author Malo & Romain
  * @version 2.0 (Version Finale)
  * * Ce fichier contient la boucle principale, le menu en mode console (CLI)
  * et l'orchestration entre les composants (Vault, Security, File).
